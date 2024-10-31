@@ -6,7 +6,7 @@ on:
       - release/alpha
       - release/beta
       - release/stable
-
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
