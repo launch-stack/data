@@ -1,4 +1,4 @@
-name: CI/CD Pipeline with Reserved Main Branch
+name: CI/CD Pipeline with Dynamic Release Type
 
 on:
   push:
@@ -18,21 +18,33 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
+          # Use caching to make builds faster
+          - name: Cache pnpm store
+            uses: actions/cache@v3
+            with:
+              path: ~/.pnpm-store
+              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+              restore-keys: |
+                ${{ runner.os }}-pnpm-store-
 
       - name: Run Linter
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Run Tests
-        run: npm test
+        run: pnpm test
 
       - name: Build Project
-        run: npm run build
+        run: pnpm run build
 
-  publish:
+  bump-version:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -42,24 +54,59 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
-      - name: Determine Release Tag
+      - name: Determine Release Type and Bump Version
         id: set_tag
         run: |
           if [ "${{ github.ref_name }}" == "release/alpha" ]; then
+            pnpm run release:alpha
             echo "RELEASE_TAG=alpha" >> $GITHUB_ENV
           elif [ "${{ github.ref_name }}" == "release/beta" ]; then
+            pnpm run release:beta
             echo "RELEASE_TAG=beta" >> $GITHUB_ENV
           else
+            pnpm run release
             echo "RELEASE_TAG=latest" >> $GITHUB_ENV
-          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Version Bump to GitHub
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git push --follow-tags origin ${{ github.ref_name }}
+
+  publish:
+    needs: bump-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Publish to NPM with Dynamic Tag
-        run: npm publish --tag ${{ env.RELEASE_TAG }}
+        run: pnpm publish --tag ${{ env.RELEASE_TAG }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
