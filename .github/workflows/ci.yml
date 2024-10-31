@@ -1,0 +1,85 @@
+name: CI/CD Pipeline with Reserved Main Branch
+
+on:
+  push:
+    branches:
+      - release/alpha
+      - release/beta
+      - release/stable
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Build Project
+        run: npm run build
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Determine Release Tag
+        id: set_tag
+        run: |
+          if [ "${{ github.ref_name }}" == "release/alpha" ]; then
+            echo "RELEASE_TAG=alpha" >> $GITHUB_ENV
+          elif [ "${{ github.ref_name }}" == "release/beta" ]; then
+            echo "RELEASE_TAG=beta" >> $GITHUB_ENV
+          else
+            echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+          fi
+
+      - name: Publish to NPM with Dynamic Tag
+        run: npm publish --tag ${{ env.RELEASE_TAG }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get version from package.json
+        id: get_version
+        run: echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        with:
+          tag_name: "v${{ env.VERSION }}"
+          release_name: "${{ env.RELEASE_TAG }} Release v${{ env.VERSION }}"
+          draft: false
+          prerelease: ${{ env.RELEASE_TAG != 'latest' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
