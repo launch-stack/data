@@ -1,0 +1,61 @@
+{
+  "name": "@launchstack/data",
+  "version": "0.1.0",
+  "description": "A data modeling tool for TypeScript that combines Zod validation with custom methods, offering minimal boilerplate for structured data handling.",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest",
+    "type-test": "tsd",
+    "lint": "eslint . --ext .ts",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/launch-stack/data.git"
+  },
+  "keywords": [
+    "data-modeling",
+    "typescript",
+    "validation",
+    "zod",
+    "schema",
+    "launchstack"
+  ],
+  "author": "Jvhaile",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/launch-stack/data/issues"
+  },
+  "homepage": "https://github.com/launch-stack/data#readme",
+  "devDependencies": {
+    "eslint": "^9.13.0",
+    "tsd": "^0.31.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
+}
