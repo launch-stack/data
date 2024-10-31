@@ -91,6 +91,7 @@ describe("Polymorphic Entity", () => {
         expect(copy.updatedAt.getTime()).toBeGreaterThan(entity.updatedAt.getTime())
         expect(copy.notify).toBeDefined()
         expect(copy.track()).toEqual(copy.shippedAt)
+        await wait(10)
 
         const secondCopy = copy.copy({
             id: '2',

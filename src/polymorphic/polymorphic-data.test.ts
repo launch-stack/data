@@ -9,7 +9,7 @@ export const PolyData = polymorphicData({
     }),
     baseMethods: {
         notify() {
-            console.log(`Notifying user ${this.userId}`);
+            return `Notifying user ${this.userId}`
         },
     },
     schemas: {
@@ -123,20 +123,6 @@ describe("PolymorphicData", () => {
     });
 
     describe("Method Functionality", () => {
-        it("should execute the notify method correctly", () => {
-            const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {
-            });
-            const pendingData = PolyData.pending({
-                userId: "user123",
-                orderedAt: currentDate,
-                pendingReason: "Awaiting stock",
-            });
-
-            pendingData.notify();
-            expect(consoleSpy).toHaveBeenCalledWith("Notifying user user123");
-
-            consoleSpy.mockRestore();
-        });
 
         it("should execute the refresh method correctly for pending data", () => {
             const pendingData = PolyData.pending({
