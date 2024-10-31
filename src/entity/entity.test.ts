@@ -1,7 +1,6 @@
-import {describe, it, expect} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {z} from 'zod';
 import {entity} from './entity';
-import {as} from "vitest/dist/chunks/reporters.anwo7Y6a";
 
 const User = entity({
     schema: z.object({

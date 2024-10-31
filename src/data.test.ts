@@ -3,8 +3,6 @@ import {data} from "./data";
 import {z} from "zod";
 
 
-
-
 const SampleData = data({
     schema: z.object({
         prop1: z.string(),

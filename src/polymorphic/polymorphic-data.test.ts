@@ -1,7 +1,6 @@
-import {describe, expect, it, beforeEach, vi} from "vitest";
+import {beforeEach, describe, expect, expectTypeOf, it, vi} from "vitest";
 import {polymorphicData} from "./polymorphic-data";
 import {z} from "zod";
-import {expectTypeOf} from "vitest";
 
 export const PolyData = polymorphicData({
     discriminator: "status",

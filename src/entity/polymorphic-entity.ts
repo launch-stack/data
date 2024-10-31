@@ -5,7 +5,6 @@ import {Entity, EntityData, IdSchema} from "./entity";
 import {DataClass, PolymorphicDataClass} from "../types";
 import {mixin} from "../mixin/mixin";
 import {Copiable} from "../data";
-import {an} from "vitest/dist/chunks/reporters.anwo7Y6a";
 
 export type PolymorphicEntityClass<
     Discriminator extends string,
