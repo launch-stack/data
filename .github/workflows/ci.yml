@@ -88,7 +88,7 @@ jobs:
       - name: Publish to NPM with Dynamic Tag
         run: pnpm publish --tag ${{ env.RELEASE_TAG }} --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_SECRET: ${{ secrets.NPM_TOKEN }}
 
   release:
     needs: publish
