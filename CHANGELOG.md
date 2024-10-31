@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.2](https://github.com/launch-stack/data/compare/v1.0.1-beta.1...v1.0.0-alpha.2) (2024-10-31)
+
+
+### Bug Fixes
+
+* exported Copiable type causing issues when imported ([4e6f3ab](https://github.com/launch-stack/data/commit/4e6f3ab6b2618dc6bff135d0c832b2ed0982dfd6))
+* fixed failing tests ([2cee318](https://github.com/launch-stack/data/commit/2cee3184c2043c1c483c0dfd9e6714faaf7646bb))
+
 ## [1.0.0-alpha.1](https://github.com/launch-stack/data/compare/v1.0.1-beta.1...v1.0.0-alpha.1) (2024-10-31)
 
 
