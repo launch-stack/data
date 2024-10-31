@@ -81,6 +81,7 @@ jobs:
             echo "RELEASE_TAG=beta" >> $GITHUB_ENV
           else
             echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
