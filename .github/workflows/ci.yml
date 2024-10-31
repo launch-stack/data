@@ -84,7 +84,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM with Dynamic Tag
-        run: pnpm publish --tag ${{ env.RELEASE_TAG }}
+        run: pnpm publish --tag ${{ env.RELEASE_TAG }} --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
