@@ -23,15 +23,17 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8
+
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
         run: pnpm install
-          - name: Cache pnpm store
-            uses: actions/cache@v3
-            with:
-              path: ~/.pnpm-store
-              key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-              restore-keys: |
-                ${{ runner.os }}-pnpm-store-
 
       - name: Run Linter
         run: pnpm run lint
@@ -42,7 +44,7 @@ jobs:
       - name: Build Project
         run: pnpm run build
 
-  bump-version:
+  publish:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -59,49 +61,28 @@ jobs:
         with:
           version: 8
 
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Determine Release Type and Bump Version
+      - name: Determine Release Tag
         id: set_tag
         run: |
           if [ "${{ github.ref_name }}" == "release/alpha" ]; then
-            pnpm run release:alpha
             echo "RELEASE_TAG=alpha" >> $GITHUB_ENV
           elif [ "${{ github.ref_name }}" == "release/beta" ]; then
-            pnpm run release:beta
             echo "RELEASE_TAG=beta" >> $GITHUB_ENV
           else
-            pnpm run release
             echo "RELEASE_TAG=latest" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push Version Bump to GitHub
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git push --follow-tags origin ${{ github.ref_name }}
-
-  publish:
-    needs: bump-version
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: pnpm install
 
       - name: Publish to NPM with Dynamic Tag
         run: pnpm publish --tag ${{ env.RELEASE_TAG }}
