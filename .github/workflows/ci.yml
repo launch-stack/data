@@ -75,13 +75,11 @@ jobs:
       - name: Determine Release Tag
         id: set_tag
         run: |
-          if [ "${{ github.ref_name }}" == "release/alpha" ]; then
-            echo "RELEASE_TAG=alpha" >> $GITHUB_ENV
-          elif [ "${{ github.ref_name }}" == "release/beta" ]; then
-            echo "RELEASE_TAG=beta" >> $GITHUB_ENV
-          else
-            echo "RELEASE_TAG=latest" >> $GITHUB_ENV
-          fi
+          case "${{ github.ref_name }}" in
+            "release/alpha") echo "RELEASE_TAG=alpha" >> $GITHUB_ENV ;;
+            "release/beta") echo "RELEASE_TAG=beta" >> $GITHUB_ENV ;;
+            *) echo "RELEASE_TAG=latest" >> $GITHUB_ENV ;;
+          esac
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
