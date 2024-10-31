@@ -83,8 +83,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Debug Environment
-        run:
-            echo "NPM Token is set: ${{ secrets.NPM_TOKEN != '' }}"
+        run: | 
+          echo "NPM Token is set: ${{ secrets.NPM_TOKEN != '' }}"
       - name: Publish to NPM with Dynamic Tag
         run: pnpm publish --tag ${{ env.RELEASE_TAG }} --no-git-checks
         env:
