@@ -66,7 +66,7 @@ export function entityMixin<
         }
 
         (EntityConstructor as any).schema = Base.schema;
-
+        (EntityConstructor as any).parse = EntityConstructor;
         return EntityConstructor as any;
     });
 }
@@ -75,7 +75,7 @@ export function entityMixin<
 export function entity<
     T extends ZodObjectTypes,
     M extends { [key: string]: (this: InstanceType, ...args: any[]) => any },
-    C extends Copiable<z.infer<T> & BaseDataType & {id:string}, InstanceType>,
+    C extends Copiable<z.infer<T> & BaseDataType & { id: string }, InstanceType>,
     B extends DataClass<any, any> | null = null,
     BaseInstanceType = B extends DataClass<any, infer U> ? U : {},
     BaseDataType = B extends DataClass<infer U, any> ? U : {},

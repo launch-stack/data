@@ -1,7 +1,7 @@
 import {z} from "zod";
 import {Pretty} from "../type-utils";
 import {polymorphicData} from "../polymorphic/polymorphic-data";
-import {Entity, EntityData, IdSchema} from "./entity";
+import {DatesSchema, Entity, EntityData, IdSchema} from "./entity";
 import {DataClass, PolymorphicDataClass} from "../types";
 import {mixin} from "../mixin/mixin";
 import {Copiable} from "../data";
@@ -144,6 +144,7 @@ export function polymorphicEntityMixin<
         }
 
         (EntityConstructor as any).schema = base.schema;
+        (EntityConstructor as any).parse = EntityConstructor;
         Object.assign(EntityConstructor, variantConstructors);
 
         return EntityConstructor as PolymorphicEntityClass<Discriminator,

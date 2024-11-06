@@ -51,6 +51,7 @@ export function data<
     }
 
     (DataConstructor as any).schema = schema;
+    (DataConstructor as any).parse = DataConstructor;
 
     return DataConstructor as DataClass<SchemaType, InstanceType>;
 }

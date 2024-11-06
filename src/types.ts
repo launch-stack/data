@@ -7,6 +7,8 @@ export interface DataClass<SchemaType, InstanceType> {
 
     (data: SchemaType): InstanceType;
 
+    parse(data: any): InstanceType;
+
     prototype: InstanceType;
 }
 

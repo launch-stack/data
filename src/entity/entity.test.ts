@@ -72,7 +72,7 @@ describe('Entity Mixin Tests', () => {
             expect(greeting).toBe('Hello, my id is user-789');
         });
 
-        it('should use the from method to create an entity instance', () => {
+        it('should work with dates provided', () => {
 
             const user = User({
                 id: 'user-101',
@@ -80,6 +80,21 @@ describe('Entity Mixin Tests', () => {
                 createdAt: new Date('2023-01-01T00:00:00Z'),
                 updatedAt: new Date('2023-01-02T00:00:00Z'),
             });
+
+            expect(user.id).toBe('user-101');
+            expect(user.name).toBe('Diana');
+            expect(user.createdAt).toEqual(new Date('2023-01-01T00:00:00Z'));
+            expect(user.updatedAt).toEqual(new Date('2023-01-02T00:00:00Z'));
+        });
+
+        it('should work with dates provided as string', () => {
+
+            const user = User({
+                id: 'user-101',
+                name: 'Diana',
+                createdAt: '2023-01-01T00:00:00Z',
+                updatedAt: '2023-01-02T00:00:00Z',
+            } as any);
 
             expect(user.id).toBe('user-101');
             expect(user.name).toBe('Diana');

@@ -123,6 +123,7 @@ export function polymorphicData<
 
     (DataConstructor as any).schema = schema;
     (DataConstructor as any).variants = Object.keys(options.schemas);
+    (DataConstructor as any).parse = DataConstructor;
     Object.assign(DataConstructor, variantConstructors);
 
     return DataConstructor as PolymorphicDataClass<
