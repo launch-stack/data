@@ -12,6 +12,11 @@ export type EntityData = {
 
 export const IdSchema = z.string().min(1)
 
+export const DatesSchema = z.object({
+    createdAt: z.coerce.date().catch(() => new Date()),
+    updatedAt: z.coerce.date().catch(() => new Date()),
+})
+
 export type Entity = {
     id: string,
     createdAt: Date,
@@ -32,11 +37,15 @@ export function entityMixin<
                 const {createdAt, updatedAt} = data
                 const id = IdSchema.parse(data.id)
 
+                const d = DatesSchema.parse({
+                    createdAt,
+                    updatedAt
+                })
                 const instance = base(data)
                 Object.assign(instance, {
                     id,
-                    createdAt: createdAt ?? updatedAt ?? new Date(),
-                    updatedAt: updatedAt ?? new Date()
+                    createdAt: d.createdAt,
+                    updatedAt: d.updatedAt,
                 })
                 Object.assign(instance, {
                     copy(partial: any) {

@@ -85,10 +85,11 @@ export function polymorphicEntityMixin<
     return mixin(Base, (base) => {
         const attach = (instance: any, data: any) => {
             const id = IdSchema.parse(data.id)
+            const date=DatesSchema.parse(data)
             return Object.assign(instance, {
                 id,
-                createdAt: data.createdAt ?? data.updatedAt ?? new Date(),
-                updatedAt: data.updatedAt ?? new Date()
+                createdAt: date.createdAt,
+                updatedAt: date.updatedAt
             })
         }
 
